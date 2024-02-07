@@ -1,0 +1,23 @@
+const jwtRefreshTokenValidate = (req, res, next) => {
+  try {
+    console.log('@@@1', req.headers["authorization"].replace("Bearer ", ""));
+    if (!req.headers["authorization"]) return res.sendStatus(401)
+    let token = req.headers["authorization"].replace("Bearer ", "")
+    if (req.headers["authorization1"]) {
+      console.log('@@@2', req.headers["authorization1"].replace("Bearer ", ""));
+      token = req.headers["authorization1"].replace("Bearer ", "")
+    }
+ 
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+      if (err) throw new Error(error)
+ 
+      req.user = decoded
+      req.user.token = token
+      delete req.user.exp
+      delete req.user.iat
+    })
+    next()
+  } catch (error) {
+    return res.sendStatus(403)
+  }
+}
